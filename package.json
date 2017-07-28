@@ -41,9 +41,11 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
+    "@types/phantom": "^3.2.2",
+    "phantom": "^4.0.5",
+    "unitejs-cli-core": "^0.6.0",
     "unitejs-framework": "^0.6.0",
-    "unitejs-image": "^0.0.1",
-    "unitejs-cli-core": "^0.6.0"
+    "unitejs-image": "^0.0.1"
   },
   "bin": {
     "unite": "bin/unite-image.js"
