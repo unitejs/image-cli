@@ -226,7 +226,7 @@
         "no-magic-numbers": false,  // by default it will find too many false positives
         "no-mergeable-namespace": false,  // your project may require mergeable namespaces
         "no-namespace": false,       // only enable this if you are not using modules/namespaces
-        "no-reference": true,        // in general you should use a module system and not /// reference imports
+        "no-reference": false,        // in general you should use a module system and not /// reference imports
         "no-unexternalized-strings": false, // the VS Code team has a specific localization process that this rule enforces
         "object-literal-shorthand": false,  // object-literal-shorthand offers an abbreviation not an abstraction
         "prefer-type-cast": true,   // pick either type-cast format and use it consistently
