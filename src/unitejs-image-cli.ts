@@ -1,17 +1,15 @@
 /**
  * Main entry point.
  */
-/// <reference path="./favicons.d.ts" />
-import * as favicons from "favicons";
 import { CLIBase } from "unitejs-cli-core/dist/cliBase";
 import { CommandLineParser } from "unitejs-cli-core/dist/commandLineParser";
 import { IDisplay } from "unitejs-framework/dist/interfaces/IDisplay";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
+import { ICO } from "unitejs-image/dist/ico";
+import { SVG } from "unitejs-image/dist/svg";
 import { CommandLineArgConstants } from "./commandLineArgConstants";
 import { CommandLineCommandConstants } from "./commandLineCommandConstants";
-
-//import { create, PhantomJS } from "phantom";
 
 export class CLI extends CLIBase {
     private static APP_NAME: string = "UniteJS Image";
@@ -27,35 +25,62 @@ export class CLI extends CLIBase {
         const command = commandLineParser.getCommand();
 
         switch (command) {
-            case CommandLineCommandConstants.SOME_COMMAND: {
+            case CommandLineCommandConstants.SVG_TO_PNG: {
                 display.info(`command: ${command}`);
-                const aParam = commandLineParser.getArgument(CommandLineArgConstants.A_PARAM);
-                display.info("aParam", [aParam]);
 
-                await this.invokeFavIcons(display, fileSystem);
+                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+                const width = commandLineParser.getArgument(CommandLineArgConstants.WIDTH);
+                const height = commandLineParser.getArgument(CommandLineArgConstants.HEIGHT);
+                const margin = commandLineParser.getArgument(CommandLineArgConstants.MARGIN);
+                const background = commandLineParser.getArgument(CommandLineArgConstants.BACKGROUND);
 
-                // display.info("Loading PhantomJS");
-                // const phantom = await create();
-                // display.info("Creating Page");
-                // const page = await phantom.createPage();
-                // display.info("Creating Page");
-                // const content = "<html><style>body { background-color:#FFF; }</style><body>This is some text<br/><img src=\"file:///D:/Workarea/unitejs/web/assets/logo/logo.svg\"/></body></html>";
-                // await page.property("viewportSize", {width:1440,height:900});
-                // await page.property("content", content);
+                const svg = new SVG();
+                ret = await svg.toPng(display,
+                                      fileSystem,
+                                      fileSystem.pathGetDirectory(sourceFile),
+                                      fileSystem.pathGetFilename(sourceFile),
+                                      fileSystem.pathGetDirectory(destFile),
+                                      fileSystem.pathGetFilename(destFile),
+                                      width,
+                                      height,
+                                      margin,
+                                      background);
+                break;
+            }
 
-                // // const status = await page.open("file:///D:/Workarea/unitejs/web/assets/logo/logot.svg");
-                // // display.info("Status", [ status ]);
+            case CommandLineCommandConstants.SVG_TO_MASK: {
+                display.info(`command: ${command}`);
 
-                // //if (status === "success") {
-                //     await page.render("D:\\unite\\test.png");
-                //     // const base64Image = await page.renderBase64("PNG");
-                //     // display.info("Base64", [ base64Image ]);
-                // //}
+                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+                const mask = commandLineParser.getArgument(CommandLineArgConstants.MASK);
 
-                // display.info("Exiting PhantomJS");
-                // phantom.exit();
+                const svg = new SVG();
+                ret = await svg.toMask(display,
+                                       fileSystem,
+                                       fileSystem.pathGetDirectory(sourceFile),
+                                       fileSystem.pathGetFilename(sourceFile),
+                                       fileSystem.pathGetDirectory(destFile),
+                                       fileSystem.pathGetFilename(destFile),
+                                       mask);
+                break;
+            }
 
-                ret = 0;
+            case CommandLineCommandConstants.PNGS_TO_ICO: {
+                display.info(`command: ${command}`);
+
+                const sourceFolder = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FOLDER);
+                const sourceFiles = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILES);
+                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+
+                const ico = new ICO();
+                ret = await ico.fromPngs(display,
+                                         fileSystem,
+                                         sourceFolder,
+                                         sourceFiles ? sourceFiles.split(",") : [],
+                                         fileSystem.pathGetDirectory(destFile),
+                                         fileSystem.pathGetFilename(destFile));
             }
         }
 
@@ -79,49 +104,45 @@ export class CLI extends CLIBase {
         return 0;
     }
 
-    private async invokeFavIcons(display: IDisplay, fileSystem: IFileSystem): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            favicons("D:/unite/logob.svg",
-                     {
-                    appName: "testApp",
-                    appDescription: "some description",
-                    developerName: "obany",
-                    developerURL: "www.obany.com",
-                    background: "#F00",
-                    path: "./assets/favicons",
-                    display: "browser",
-                    orientation: "portrait",
-                    start_url: "/?homescreen=1",
-                    version: 1,
-                    logging: true,
-                    online: false,
-                    preferOnline: false
-                },   (error, response) => {
-
-                    if (error) {
-                        display.log(error.status);  // HTTP error code (e.g. `200`) or `null`
-                        display.log(error.name);    // Error name e.g. "API Error"
-                        display.log(error.message); // Error description e.g. "An unknown error has occurred"
-                        return;
-                    }
-                    /* tslint:disable*/
-                    // console.log(response.images);   // Array of { name: string, contents: <buffer> }
-                    // console.log(response.files);    // Array of { name: string, contents: <string> }
-                    // console.log(response.html);     // Array of strings (html elements)
-
-                    const promises: Promise<any>[] = [];
-                    for(let i = 0; i < response.images.length; i++) {
-                        promises.push(fileSystem.fileWriteBinary("d:\\unite\\favicon\\", response.images[i].name, response.images[i].contents));
-                    }
-                    for(let i = 0; i < response.files.length; i++) {
-                        promises.push(fileSystem.fileWriteBinary("d:\\unite\\favicon\\", response.files[i].name, response.files[i].contents));
-                    }
-                    promises.push(fileSystem.fileWriteLines("d:\\unite\\favicon\\", "meta.html", response.html));
-
-                    Promise.all(promises)
-                    .then(() => resolve());
-                });
-
-        });
-    }
 }
+
+/* node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\android-chrome-192x192.png --width=192 --height=192 --margin=10 --background=#339933
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\android-chrome-512x512.png --width=512 --height=512 --margin=10 --background=#339933
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\apple-touch-icon.png --width=180 --height=180 --margin=10 --background=#339933
+
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\mstile-70x70.png --width=128 --height=128 --margin=10
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\mstile-144x144.png --width=144 --height=144 --margin=0
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\mstile-150x150.png --width=270 --height=270 --margin=50
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\mstile-310x150.png --width=558 --height=270 --margin=50
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\mstile-310x310.png --width=558 --height=558 --margin=50
+
+node ./bin/unite-image svgToMask --sourceFile=d:\unite\favicon\logo-transparent.svg --destFile=d:\unite\favicon\favicons2\safari-pinned-tab.svg --mask=#FFFFFF
+
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo.svg --destFile=d:\unite\favicon\favicons2\favicon-16x16.png --width=16 --height=16
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo.svg --destFile=d:\unite\favicon\favicons2\favicon-32x32.png --width=32 --height=32
+node ./bin/unite-image svgToPng --sourceFile=d:\unite\favicon\logo.svg --destFile=d:\unite\favicon\favicons2\favicon-48x48.png --width=48 --height=48
+
+node ./bin/unite-image pngsToIco --sourceFolder=d:\unite\favicon\favicons2 --sourceFiles=favicon-16x16.png,favicon-32x32.png,favicon-48x48.png --destFile=d:\unite\favicon\favicons2\favicon.ico
+
+
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "android-chrome-192x192.png", 192, 192, 10, "#339933");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2", "/android-chrome-512x512.png", 512, 512, 10, "#339933");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "apple-touch-icon.png", 180, 180, 10, "#339933");
+
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-70x70.png", 128, 128, 10, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-144x144.png", 144, 144, 0, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-150x150.png", 270, 270, 50, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-310x150.png", 558, 270, 50, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-310x310.png", 558, 558, 50, "");
+
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-16x16.png", 16, 16, 0, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-32x32.png", 32, 32, 0, "");
+await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-48x48.png", 48, 48, 0, "");
+
+await this.pngToIco(display, fileSystem, ["D:/unite/favicon/favicons2/favicon-16x16.png",
+    "D:/unite/favicon/favicons2/favicon-32x32.png",
+    "D:/unite/favicon/favicons2/favicon-48x48.png"],
+                    "D:/unite/favicon/favicons2",
+                    "favicon.ico");
+
+await fileSystem.fileDelete("D:/unite/favicon/favicons2/", "favicon-48x48.png");*/

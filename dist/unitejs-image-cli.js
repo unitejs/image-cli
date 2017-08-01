@@ -11,12 +11,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Main entry point.
  */
-/// <reference path="./favicons.d.ts" />
-const favicons = require("favicons");
 const cliBase_1 = require("unitejs-cli-core/dist/cliBase");
+const ico_1 = require("unitejs-image/dist/ico");
+const svg_1 = require("unitejs-image/dist/svg");
 const commandLineArgConstants_1 = require("./commandLineArgConstants");
 const commandLineCommandConstants_1 = require("./commandLineCommandConstants");
-//import { create, PhantomJS } from "phantom";
 class CLI extends cliBase_1.CLIBase {
     constructor() {
         super(CLI.APP_NAME, CLI.DEFAULT_LOG);
@@ -26,29 +25,34 @@ class CLI extends cliBase_1.CLIBase {
             let ret = -1;
             const command = commandLineParser.getCommand();
             switch (command) {
-                case commandLineCommandConstants_1.CommandLineCommandConstants.SOME_COMMAND: {
+                case commandLineCommandConstants_1.CommandLineCommandConstants.SVG_TO_PNG: {
                     display.info(`command: ${command}`);
-                    const aParam = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.A_PARAM);
-                    display.info("aParam", [aParam]);
-                    yield this.invokeFavIcons(display, fileSystem);
-                    // display.info("Loading PhantomJS");
-                    // const phantom = await create();
-                    // display.info("Creating Page");
-                    // const page = await phantom.createPage();
-                    // display.info("Creating Page");
-                    // const content = "<html><style>body { background-color:#FFF; }</style><body>This is some text<br/><img src=\"file:///D:/Workarea/unitejs/web/assets/logo/logo.svg\"/></body></html>";
-                    // await page.property("viewportSize", {width:1440,height:900});
-                    // await page.property("content", content);
-                    // // const status = await page.open("file:///D:/Workarea/unitejs/web/assets/logo/logot.svg");
-                    // // display.info("Status", [ status ]);
-                    // //if (status === "success") {
-                    //     await page.render("D:\\unite\\test.png");
-                    //     // const base64Image = await page.renderBase64("PNG");
-                    //     // display.info("Base64", [ base64Image ]);
-                    // //}
-                    // display.info("Exiting PhantomJS");
-                    // phantom.exit();
-                    ret = 0;
+                    const sourceFile = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.SOURCE_FILE);
+                    const destFile = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.DEST_FILE);
+                    const width = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.WIDTH);
+                    const height = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.HEIGHT);
+                    const margin = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.MARGIN);
+                    const background = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.BACKGROUND);
+                    const svg = new svg_1.SVG();
+                    ret = yield svg.toPng(display, fileSystem, fileSystem.pathGetDirectory(sourceFile), fileSystem.pathGetFilename(sourceFile), fileSystem.pathGetDirectory(destFile), fileSystem.pathGetFilename(destFile), width, height, margin, background);
+                    break;
+                }
+                case commandLineCommandConstants_1.CommandLineCommandConstants.SVG_TO_MASK: {
+                    display.info(`command: ${command}`);
+                    const sourceFile = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.SOURCE_FILE);
+                    const destFile = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.DEST_FILE);
+                    const mask = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.MASK);
+                    const svg = new svg_1.SVG();
+                    ret = yield svg.toMask(display, fileSystem, fileSystem.pathGetDirectory(sourceFile), fileSystem.pathGetFilename(sourceFile), fileSystem.pathGetDirectory(destFile), fileSystem.pathGetFilename(destFile), mask);
+                    break;
+                }
+                case commandLineCommandConstants_1.CommandLineCommandConstants.PNGS_TO_ICO: {
+                    display.info(`command: ${command}`);
+                    const sourceFolder = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.SOURCE_FOLDER);
+                    const sourceFiles = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.SOURCE_FILES);
+                    const destFile = commandLineParser.getArgument(commandLineArgConstants_1.CommandLineArgConstants.DEST_FILE);
+                    const ico = new ico_1.ICO();
+                    ret = yield ico.fromPngs(display, fileSystem, sourceFolder, sourceFiles ? sourceFiles.split(",") : [], fileSystem.pathGetDirectory(destFile), fileSystem.pathGetFilename(destFile));
                 }
             }
             return ret;
@@ -67,51 +71,26 @@ class CLI extends cliBase_1.CLIBase {
         display.info("  See https://github.com/unitejs/image-cli#readme for further details.");
         return 0;
     }
-    invokeFavIcons(display, fileSystem) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return new Promise((resolve, reject) => {
-                favicons("D:/unite/logob.svg", {
-                    appName: "testApp",
-                    appDescription: "some description",
-                    developerName: "obany",
-                    developerURL: "www.obany.com",
-                    background: "#F00",
-                    path: "./assets/favicons",
-                    display: "browser",
-                    orientation: "portrait",
-                    start_url: "/?homescreen=1",
-                    version: 1,
-                    logging: true,
-                    online: false,
-                    preferOnline: false
-                }, (error, response) => {
-                    if (error) {
-                        display.log(error.status); // HTTP error code (e.g. `200`) or `null`
-                        display.log(error.name); // Error name e.g. "API Error"
-                        display.log(error.message); // Error description e.g. "An unknown error has occurred"
-                        return;
-                    }
-                    /* tslint:disable*/
-                    // console.log(response.images);   // Array of { name: string, contents: <buffer> }
-                    // console.log(response.files);    // Array of { name: string, contents: <string> }
-                    // console.log(response.html);     // Array of strings (html elements)
-                    const promises = [];
-                    for (let i = 0; i < response.images.length; i++) {
-                        promises.push(fileSystem.fileWriteBinary("d:\\unite\\favicon\\", response.images[i].name, response.images[i].contents));
-                    }
-                    for (let i = 0; i < response.files.length; i++) {
-                        promises.push(fileSystem.fileWriteBinary("d:\\unite\\favicon\\", response.files[i].name, response.files[i].contents));
-                    }
-                    promises.push(fileSystem.fileWriteLines("d:\\unite\\favicon\\", "meta.html", response.html));
-                    Promise.all(promises)
-                        .then(() => resolve());
-                });
-            });
-        });
-    }
 }
 CLI.APP_NAME = "UniteJS Image";
 CLI.DEFAULT_LOG = "unite-image.log";
 exports.CLI = CLI;
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "android-chrome-192x192.png", 192, 192, 10, "#339933");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2", "/android-chrome-512x512.png", 512, 512, 10, "#339933");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "apple-touch-icon.png", 180, 180, 10, "#339933");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-70x70.png", 128, 128, 10, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-144x144.png", 144, 144, 0, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-150x150.png", 270, 270, 50, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-310x150.png", 558, 270, 50, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo-transparent.svg", "D:/unite/favicon/favicons2/", "mstile-310x310.png", 558, 558, 50, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-16x16.png", 16, 16, 0, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-32x32.png", 32, 32, 0, "");
+// await this.svgToPng(display, fileSystem, page, "D:/unite/favicon/", "logo.svg", "D:/unite/favicon/favicons2/", "favicon-48x48.png", 48, 48, 0, "");
+// await this.pngToIco(display, fileSystem, ["D:/unite/favicon/favicons2/favicon-16x16.png",
+//     "D:/unite/favicon/favicons2/favicon-32x32.png",
+//     "D:/unite/favicon/favicons2/favicon-48x48.png"],
+//                     "D:/unite/favicon/favicons2",
+//                     "favicon.ico");
+// await fileSystem.fileDelete("D:/unite/favicon/favicons2/", "favicon-48x48.png");
 
-//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91bml0ZWpzLWltYWdlLWNsaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7O0dBRUc7QUFDSCx3Q0FBd0M7QUFDeEMscUNBQXFDO0FBQ3JDLDJEQUF3RDtBQUt4RCx1RUFBb0U7QUFDcEUsK0VBQTRFO0FBRTVFLDhDQUE4QztBQUU5QyxTQUFpQixTQUFRLGlCQUFPO0lBSTVCO1FBQ0ksS0FBSyxDQUFDLEdBQUcsQ0FBQyxRQUFRLEVBQUUsR0FBRyxDQUFDLFdBQVcsQ0FBQyxDQUFDO0lBQ3pDLENBQUM7SUFFWSxtQkFBbUIsQ0FBQyxNQUFlLEVBQUUsT0FBaUIsRUFBRSxVQUF1QixFQUFFLGlCQUFvQzs7WUFDOUgsSUFBSSxHQUFHLEdBQVcsQ0FBQyxDQUFDLENBQUM7WUFFckIsTUFBTSxPQUFPLEdBQUcsaUJBQWlCLENBQUMsVUFBVSxFQUFFLENBQUM7WUFFL0MsTUFBTSxDQUFDLENBQUMsT0FBTyxDQUFDLENBQUMsQ0FBQztnQkFDZCxLQUFLLHlEQUEyQixDQUFDLFlBQVksRUFBRSxDQUFDO29CQUM1QyxPQUFPLENBQUMsSUFBSSxDQUFDLFlBQVksT0FBTyxFQUFFLENBQUMsQ0FBQztvQkFDcEMsTUFBTSxNQUFNLEdBQUcsaUJBQWlCLENBQUMsV0FBVyxDQUFDLGlEQUF1QixDQUFDLE9BQU8sQ0FBQyxDQUFDO29CQUM5RSxPQUFPLENBQUMsSUFBSSxDQUFDLFFBQVEsRUFBRSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUM7b0JBRWpDLE1BQU0sSUFBSSxDQUFDLGNBQWMsQ0FBQyxPQUFPLEVBQUUsVUFBVSxDQUFDLENBQUM7b0JBRS9DLHFDQUFxQztvQkFDckMsa0NBQWtDO29CQUNsQyxpQ0FBaUM7b0JBQ2pDLDJDQUEyQztvQkFDM0MsaUNBQWlDO29CQUNqQyx1TEFBdUw7b0JBQ3ZMLGdFQUFnRTtvQkFDaEUsMkNBQTJDO29CQUUzQyw4RkFBOEY7b0JBQzlGLHlDQUF5QztvQkFFekMsZ0NBQWdDO29CQUNo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QUMsRUFBRSxFQUFFLENBQUM7d0JBQzVDLFFBQVEsQ0FBQyxJQUFJLENBQUMsVUFBVSxDQUFDLGVBQWUsQ0FBQyxzQkFBc0IsRUFBRSxRQUFRLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFDLElBQUksRUFBRSxRQUFRLENBQUMsS0FBSyxDQUFDLENBQUMsQ0FBQyxDQUFDLFFBQVEsQ0FBQyxDQUFDLENBQUM7b0JBQzFILENBQUM7b0JBQ0QsUUFBUSxDQUFDLElBQUksQ0FBQyxVQUFVLENBQUMsY0FBYyxDQUFDLHNCQUFzQixFQUFFLFdBQVcsRUFBRSxRQUFRLENBQUMsSUFBSSxDQUFDLENBQUMsQ0FBQztvQkFFN0YsT0FBTyxDQUFDLEdBQUcsQ0FBQyxRQUFRLENBQUM7eUJBQ3BCLElBQUksQ0FBQyxNQUFNLE9BQU8sRUFBRSxDQUFDLENBQUM7Z0JBQzNCLENBQUMsQ0FBQyxDQUFDO1lBRVgsQ0FBQyxDQUFDLENBQUM7UUFDUCxDQUFDO0tBQUE7O0FBN0djLFlBQVEsR0FBVyxlQUFlLENBQUM7QUFDbkMsZUFBVyxHQUFXLGlCQUFpQixDQUFDO0FBRjNELGtCQStHQyIsImZpbGUiOiJ1bml0ZWpzLWltYWdlLWNsaS5qcyIsInNvdXJjZVJvb3QiOiIuLi9zcmMifQ==
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uL3NyYy91bml0ZWpzLWltYWdlLWNsaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7O0FBQUE7O0dBRUc7QUFDSCwyREFBd0Q7QUFLeEQsZ0RBQTZDO0FBQzdDLGdEQUE2QztBQUM3Qyx1RUFBb0U7QUFDcEUsK0VBQTRFO0FBRTVFLFNBQWlCLFNBQVEsaUJBQU87SUFJNUI7UUFDSSxLQUFLLENBQUMsR0FBRyxDQUFDLFFBQVEsRUFBRSxHQUFHLENBQUMsV0FBVyxDQUFDLENBQUM7SUFDekMsQ0FBQztJQUVZLG1CQUFtQixDQUFDLE1BQWUsRUFBRSxPQUFpQixFQUFFLFVBQXVCLEVBQUUsaUJBQW9DOztZQUM5SCxJQUFJLEdBQUcsR0FBVyxDQUFDLENBQUMsQ0FBQztZQUVyQixNQUFNLE9BQU8sR0FBRyxpQkFBaUIsQ0FBQyxVQUFVLEVBQUUsQ0FBQztZQUUvQyxNQUFNLENBQUMsQ0FBQyxPQUFPLENBQUMsQ0FBQyxDQUFDO2dCQUNkLEtBQUsseURBQTJCLENBQUMsVUFBVSxFQUFFLENBQUM7b0JBQzFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsWUFBWSxPQUFPLEVBQUUsQ0FBQyxDQUFDO29CQUVwQyxNQUFNLFVBQVUsR0FBRyxpQkFBaUIsQ0FBQyxXQUFXLENBQUMsaURBQXVCLENBQUMsV0FBVyxDQUFDLENBQUM7b0JBQ3RGLE1BQU0sUUFBUSxHQUFHLGlCQUFpQixDQUFDLFdBQVcsQ0FBQyxpREFBdUIsQ0FBQyxTQUFTLENBQUMsQ0FBQztvQkFDbEYsTUFBTSxLQUFLLEdBQUcsaUJBQWlCLENBQUMsV0FBVyxDQUFDLGlEQUF1QixDQUFDLEtBQUssQ0FBQyxDQUFDO29CQUMzRSxNQUFNLE1BQU0sR0FBRyxpQkFBaUIsQ0FBQyxXQUFXLENBQUMsaURBQXVCLENBQUMsTUFBTSxDQUFDLENBQUM7b0JBQzdFLE1BQU0sTUFBTSxHQUFHLGlCQUFpQixDQUFDLFdBQVcsQ0FBQyxpREFBdUIsQ0FBQyxNQUFNLENBQUMsQ0FBQztvQkFDN0Us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QUMsSUFBSSxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBQ2pCLElBQUksQ0FBQyxrQkFBa0IsQ0FBQyxPQUFPLEVBQUUsMkhBQTJILENBQUMsQ0FBQztRQUM5SixPQUFPLENBQUMsSUFBSSxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBRWpCLE9BQU8sQ0FBQyxXQUFXLENBQUMsa0JBQWtCLENBQUMsQ0FBQztRQUN4QyxPQUFPLENBQUMsSUFBSSxDQUFDLEVBQUUsQ0FBQyxDQUFDO1FBQ2pCLE9BQU8sQ0FBQyxJQUFJLENBQUMsd0VBQXdFLENBQUMsQ0FBQztRQUV2RixNQUFNLENBQUMsQ0FBQyxDQUFDO0lBQ2IsQ0FBQzs7QUExRmMsWUFBUSxHQUFXLGVBQWUsQ0FBQztBQUNuQyxlQUFXLEdBQVcsaUJBQWlCLENBQUM7QUFGM0Qsa0JBNkZDO0FBRUQscUxBQXFMO0FBQ3JMLHFMQUFxTDtBQUNyTCwrS0FBK0s7QUFFL0ssb0tBQW9LO0FBQ3BLLHFLQUFxSztBQUNySyxzS0FBc0s7QUFDdEssc0tBQXNLO0FBQ3RLLHNLQUFzSztBQUV0SyxzSkFBc0o7QUFDdEosc0pBQXNKO0FBQ3RKLHNKQUFzSjtBQUV0Siw0RkFBNEY7QUFDNUYsc0RBQXNEO0FBQ3RELHVEQUF1RDtBQUN2RCxvREFBb0Q7QUFDcEQsc0NBQXNDO0FBRXRDLG1GQUFtRiIsImZpbGUiOiJ1bml0ZWpzLWltYWdlLWNsaS5qcyIsInNvdXJjZVJvb3QiOiIuLi9zcmMifQ==
