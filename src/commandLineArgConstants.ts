@@ -8,7 +8,7 @@ export class CommandLineArgConstants {
     public static DEST_FILE: string = "destFile";
     public static WIDTH: string = "width";
     public static HEIGHT: string = "height";
-    public static MARGIN: string = "margin";
+    public static MARGIN_X: string = "marginX";
+    public static MARGIN_Y: string = "marginY";
     public static BACKGROUND: string = "background";
-    public static MASK: string = "mask";
 }
