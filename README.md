@@ -62,3 +62,12 @@ This command will combine all the supplied png files into an ico file.
 # Example
 
     unite-image pngsToIco --sourceFolder=/unite/ --sourceFiles=favicon-16x16.png,favicon-32x32.png,favicon-48x48.png --destFile=/unite/favicon.ico
+
+## global arguments
+
+| Argument            | Value                                     | Used For                                         |
+|---------------------|-------------------------------------------|--------------------------------------------------|
+| noColor             |                                           | If this is used no color will appear in output   |
+|                     |                                           |   optional - defaults to on                      |
+| logFile             | 'filename'                                | The log file to store the logging in             |
+|                     |                                           |   optional - default to no file logging          |
