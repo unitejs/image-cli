@@ -1,6 +1,6 @@
 {
   "name": "unitejs-image-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Command line interface to the UniteJS image tool library",
   "main": "dist/unitejs-image-cli.js",
   "repository": {
@@ -15,6 +15,7 @@
     "svg",
     "ico",
     "png",
+    "icns",
     "mask",
     "framework",
     "scaffolding",
@@ -50,7 +51,7 @@
     "phantom": "^4.0.5",
     "unitejs-cli-core": "^0.7.1",
     "unitejs-framework": "^0.7.1",
-    "unitejs-image": "^0.1.1"
+    "unitejs-image": "^0.1.2"
   },
   "bin": {
     "unite-image": "bin/unite-image.js"

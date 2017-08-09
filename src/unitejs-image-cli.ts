@@ -5,6 +5,7 @@ import { CLIBase } from "unitejs-cli-core/dist/cliBase";
 import { CommandLineParser } from "unitejs-cli-core/dist/commandLineParser";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
+import { ICNS } from "unitejs-image/dist/icns";
 import { ICO } from "unitejs-image/dist/ico";
 import { SVG } from "unitejs-image/dist/svg";
 import { CommandLineArgConstants } from "./commandLineArgConstants";
@@ -79,6 +80,22 @@ export class CLI extends CLIBase {
                                          sourceFiles ? sourceFiles.split(",") : [],
                                          fileSystem.pathGetDirectory(destFile),
                                          fileSystem.pathGetFilename(destFile));
+                break;
+            }
+
+            case CommandLineCommandConstants.PNG_TO_ICNS: {
+                logger.info("command", { command });
+
+                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+
+                const icns = new ICNS();
+                ret = await icns.fromPng(logger,
+                                         fileSystem,
+                                         fileSystem.pathGetDirectory(sourceFile),
+                                         fileSystem.pathGetFilename(sourceFile),
+                                         fileSystem.pathGetDirectory(destFile),
+                                         fileSystem.pathGetFilename(destFile));
             }
         }
 
@@ -115,6 +132,12 @@ export class CLI extends CLIBase {
         this.markdownTableToCli(logger, "| sourceFolder        | 'folder'                                     | The folder that contains the png files           |");
         this.markdownTableToCli(logger, "| sourceFiles         | comma separated list of filenames            | The files to combine from the sourceFolder       |");
         this.markdownTableToCli(logger, "| destFile            | 'path to ico file'                           | Destination image for generated ico              |");
+        logger.info("");
+
+        logger.banner("pngToIcns");
+        logger.info("");
+        this.markdownTableToCli(logger, "| sourceFile          | 'path to png file'                           | Source png image to generate icns                |");
+        this.markdownTableToCli(logger, "| destFile            | 'path to icns file'                          | Destination image for generated icns             |");
         logger.info("");
 
         logger.banner("Global Arguments");

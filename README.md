@@ -63,6 +63,19 @@ This command will combine all the supplied png files into an ico file.
 
     unite-image pngsToIco --sourceFolder=/unite/ --sourceFiles=favicon-16x16.png,favicon-32x32.png,favicon-48x48.png --destFile=/unite/favicon.ico
 
+## Command pngToIcns
+
+This command will take the original png file and create an Apple icns file containing multiple sizes.
+
+| Argument            | Value                                        | Used For                                         |
+|---------------------|----------------------------------------------|--------------------------------------------------|
+| sourceFile          | 'path to png file'                           | Source png image to generate icns                |
+| destFile            | 'path to icns file'                          | Destination image for generated icns             |
+
+# Example
+
+    unite-image pngToIcns --sourceFile=/unite/logo.png --destFile=/unite/icon.icns
+
 ## global arguments
 
 | Argument            | Value                                     | Used For                                         |
