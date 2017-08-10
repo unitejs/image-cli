@@ -1,4 +1,4 @@
-[![Join the chat at https://gitter.im/unitejs/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/unitejs/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NPM version][npm-version-image]][npm-url] [![Build Status][travis-image]][travis-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] 
+[![Join the chat at https://gitter.im/unitejs/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/unitejs/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NPM version][npm-version-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coveralls][coveralls-image]][coveralls-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] 
 
 # UniteJS Image CLI
 Command line interface to the UniteJS image management tool.
@@ -96,3 +96,6 @@ This command will take the original png file and create an Apple icns file conta
 
 [travis-url]: http://travis-ci.org/unitejs/image-cli/
 [travis-image]: http://img.shields.io/travis/unitejs/image-cli/master.svg?style=flat
+
+[coveralls-url]: https://coveralls.io/github/unitejs/image-cli
+[coveralls-image]: https://img.shields.io/coveralls/unitejs/image-cli.svg

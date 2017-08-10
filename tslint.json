@@ -148,7 +148,7 @@
         "no-var-keyword": true,
         "no-var-requires": true,
         "no-var-self": true,
-        "no-void-expression": true,
+        "no-void-expression": false,
         "object-literal-sort-keys": false, // turn object-literal-sort-keys off and sort keys in a meaningful manner
         "one-variable-per-declaration": [true],
         "only-arrow-functions": [false],  // there are many valid reasons to declare a function
@@ -226,7 +226,7 @@
         "no-magic-numbers": false,  // by default it will find too many false positives
         "no-mergeable-namespace": false,  // your project may require mergeable namespaces
         "no-namespace": false,       // only enable this if you are not using modules/namespaces
-        "no-reference": false,        // in general you should use a module system and not /// reference imports
+        "no-reference": true,        // in general you should use a module system and not /// reference imports
         "no-unexternalized-strings": false, // the VS Code team has a specific localization process that this rule enforces
         "object-literal-shorthand": false,  // object-literal-shorthand offers an abbreviation not an abstraction
         "prefer-type-cast": true,   // pick either type-cast format and use it consistently
@@ -236,6 +236,7 @@
         "prefer-function-over-method": false,
         "prefer-conditional-expression": false,
         "strict-type-predicates": false,
+        "no-submodule-imports": false,
 
         /**
          * Deprecated rules.  The following rules are deprecated for various reasons.
