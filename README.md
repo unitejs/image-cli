@@ -1,4 +1,6 @@
 # UniteJS Image CLI
+
+[![Join the chat at https://gitter.im/unitejs/image-cli](https://badges.gitter.im/unitejs/image-cli.svg)](https://gitter.im/unitejs/image-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Command line interface to the UniteJS image management tool.
 
 # Install
