@@ -3,7 +3,7 @@
 
 process.title = 'unite-image';
 
-const cliMod = require('../dist/unitejs-image-cli');
+const cliMod = require('../dist/cli');
 
 const cli = new cliMod.CLI();
 cli.run(process)

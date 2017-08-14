@@ -27,13 +27,13 @@ export class CLI extends CLIBase {
             case CommandLineCommandConstants.SVG_TO_PNG: {
                 logger.info("command", { command });
 
-                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
-                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
-                const width = commandLineParser.getArgument(CommandLineArgConstants.WIDTH);
-                const height = commandLineParser.getArgument(CommandLineArgConstants.HEIGHT);
-                const marginX = commandLineParser.getArgument(CommandLineArgConstants.MARGIN_X);
-                const marginY = commandLineParser.getArgument(CommandLineArgConstants.MARGIN_Y);
-                const background = commandLineParser.getArgument(CommandLineArgConstants.BACKGROUND);
+                const sourceFile = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
+                const width = commandLineParser.getNumberArgument(CommandLineArgConstants.WIDTH);
+                const height = commandLineParser.getNumberArgument(CommandLineArgConstants.HEIGHT);
+                const marginX = commandLineParser.getNumberArgument(CommandLineArgConstants.MARGIN_X);
+                const marginY = commandLineParser.getNumberArgument(CommandLineArgConstants.MARGIN_Y);
+                const background = commandLineParser.getStringArgument(CommandLineArgConstants.BACKGROUND);
 
                 const svg = new SVG();
                 ret = await svg.toPng(logger,
@@ -53,8 +53,8 @@ export class CLI extends CLIBase {
             case CommandLineCommandConstants.SVG_TO_MASK: {
                 logger.info("command", { command });
 
-                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
-                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+                const sourceFile = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
                 const svg = new SVG();
                 ret = await svg.toMask(logger,
@@ -69,9 +69,9 @@ export class CLI extends CLIBase {
             case CommandLineCommandConstants.PNGS_TO_ICO: {
                 logger.info("command", { command });
 
-                const sourceFolder = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FOLDER);
-                const sourceFiles = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILES);
-                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+                const sourceFolder = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FOLDER);
+                const sourceFiles = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILES);
+                const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
                 const ico = new ICO();
                 ret = await ico.fromPngs(logger,
@@ -86,8 +86,8 @@ export class CLI extends CLIBase {
             case CommandLineCommandConstants.PNG_TO_ICNS: {
                 logger.info("command", { command });
 
-                const sourceFile = commandLineParser.getArgument(CommandLineArgConstants.SOURCE_FILE);
-                const destFile = commandLineParser.getArgument(CommandLineArgConstants.DEST_FILE);
+                const sourceFile = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILE);
+                const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
                 const icns = new ICNS();
                 ret = await icns.fromPng(logger,
