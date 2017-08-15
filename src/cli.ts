@@ -35,18 +35,21 @@ export class CLI extends CLIBase {
                 const marginY = commandLineParser.getNumberArgument(CommandLineArgConstants.MARGIN_Y);
                 const background = commandLineParser.getStringArgument(CommandLineArgConstants.BACKGROUND);
 
-                const svg = new SVG();
-                ret = await svg.toPng(logger,
-                                      fileSystem,
-                                      fileSystem.pathGetDirectory(sourceFile),
-                                      fileSystem.pathGetFilename(sourceFile),
-                                      fileSystem.pathGetDirectory(destFile),
-                                      fileSystem.pathGetFilename(destFile),
-                                      width,
-                                      height,
-                                      marginX,
-                                      marginY,
-                                      background);
+                ret = this.checkRemaining(logger, commandLineParser);
+                if (ret === 0) {
+                    const svg = new SVG();
+                    ret = await svg.toPng(logger,
+                                          fileSystem,
+                                          fileSystem.pathGetDirectory(sourceFile),
+                                          fileSystem.pathGetFilename(sourceFile),
+                                          fileSystem.pathGetDirectory(destFile),
+                                          fileSystem.pathGetFilename(destFile),
+                                          width,
+                                          height,
+                                          marginX,
+                                          marginY,
+                                          background);
+                }
                 break;
             }
 
@@ -56,13 +59,16 @@ export class CLI extends CLIBase {
                 const sourceFile = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILE);
                 const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
-                const svg = new SVG();
-                ret = await svg.toMask(logger,
-                                       fileSystem,
-                                       fileSystem.pathGetDirectory(sourceFile),
-                                       fileSystem.pathGetFilename(sourceFile),
-                                       fileSystem.pathGetDirectory(destFile),
-                                       fileSystem.pathGetFilename(destFile));
+                ret = this.checkRemaining(logger, commandLineParser);
+                if (ret === 0) {
+                    const svg = new SVG();
+                    ret = await svg.toMask(logger,
+                                           fileSystem,
+                                           fileSystem.pathGetDirectory(sourceFile),
+                                           fileSystem.pathGetFilename(sourceFile),
+                                           fileSystem.pathGetDirectory(destFile),
+                                           fileSystem.pathGetFilename(destFile));
+                }
                 break;
             }
 
@@ -73,13 +79,16 @@ export class CLI extends CLIBase {
                 const sourceFiles = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILES);
                 const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
-                const ico = new ICO();
-                ret = await ico.fromPngs(logger,
-                                         fileSystem,
-                                         sourceFolder,
-                                         sourceFiles ? sourceFiles.split(",") : [],
-                                         fileSystem.pathGetDirectory(destFile),
-                                         fileSystem.pathGetFilename(destFile));
+                ret = this.checkRemaining(logger, commandLineParser);
+                if (ret === 0) {
+                    const ico = new ICO();
+                    ret = await ico.fromPngs(logger,
+                                             fileSystem,
+                                             sourceFolder,
+                                             sourceFiles ? sourceFiles.split(",") : [],
+                                             fileSystem.pathGetDirectory(destFile),
+                                             fileSystem.pathGetFilename(destFile));
+                }
                 break;
             }
 
@@ -89,13 +98,16 @@ export class CLI extends CLIBase {
                 const sourceFile = commandLineParser.getStringArgument(CommandLineArgConstants.SOURCE_FILE);
                 const destFile = commandLineParser.getStringArgument(CommandLineArgConstants.DEST_FILE);
 
-                const icns = new ICNS();
-                ret = await icns.fromPng(logger,
-                                         fileSystem,
-                                         fileSystem.pathGetDirectory(sourceFile),
-                                         fileSystem.pathGetFilename(sourceFile),
-                                         fileSystem.pathGetDirectory(destFile),
-                                         fileSystem.pathGetFilename(destFile));
+                ret = this.checkRemaining(logger, commandLineParser);
+                if (ret === 0) {
+                    const icns = new ICNS();
+                    ret = await icns.fromPng(logger,
+                                             fileSystem,
+                                             fileSystem.pathGetDirectory(sourceFile),
+                                             fileSystem.pathGetFilename(sourceFile),
+                                             fileSystem.pathGetDirectory(destFile),
+                                             fileSystem.pathGetFilename(destFile));
+                }
             }
         }
 
@@ -155,5 +167,4 @@ export class CLI extends CLIBase {
 
         return 0;
     }
-
 }
