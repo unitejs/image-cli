@@ -1,6 +1,8 @@
 [![Join the chat at https://gitter.im/unitejs/discuss](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/unitejs/discuss?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![NPM version][npm-version-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Coveralls][coveralls-image]][coveralls-url] [![NPM downloads][npm-downloads-image]][npm-url] [![MIT License][license-image]][license-url] 
 
 # UniteJS Image CLI
+
+[![Join the chat at https://gitter.im/unitejs/image-cli](https://badges.gitter.im/unitejs/image-cli.svg)](https://gitter.im/unitejs/image-cli?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 Command line interface to the UniteJS image management tool.
 
 # Install
