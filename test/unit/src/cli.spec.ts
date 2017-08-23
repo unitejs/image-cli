@@ -56,22 +56,22 @@ describe("CLI", () => {
         it("can handle svgToPng", async () => {
             const obj = new CLI();
             commandLineParser.parse(["node", "./bin/unite-image.js", "svgToPng",
-                "--sourceFile=./test/unit/assets/test1024.png",
-                "--destFile=./test/unit/temp/test.svg",
+                "--sourceFile=./test/unit/assets/test.svg",
+                "--destFile=./test/unit/temp/test1024.png",
                 "--width=100",
                 "--height=100"
             ]);
             const res = await obj.handleCustomCommand(loggerStub, fileSystemStub, commandLineParser);
             Chai.expect(res).to.be.equal(0);
-            const fileExists = await fileSystemStub.fileExists("./test/unit/temp/", "test.svg");
+            const fileExists = await fileSystemStub.fileExists("./test/unit/temp/", "test1024.png");
             Chai.expect(fileExists).to.be.equal(true);
         });
 
         it("can fail svgToPng with unknown args", async () => {
             const obj = new CLI();
             commandLineParser.parse(["node", "./bin/unite-image.js", "svgToPng",
-                "--sourceFile=./test/unit/assets/test1024.png",
-                "--destFile=./test/unit/temp/test.svg",
+                "--sourceFile=./test/unit/assets/test.svg",
+                "--destFile=./test/unit/temp/test1024.png",
                 "--width=100",
                 "--height=100",
                 "--colour=#FFF"
