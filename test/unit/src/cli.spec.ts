@@ -7,14 +7,12 @@ import { CommandLineParser } from "unitejs-cli-core/dist/commandLineParser";
 import { FileSystem } from "unitejs-cli-core/dist/fileSystem";
 import { IFileSystem } from "unitejs-framework/dist/interfaces/IFileSystem";
 import { ILogger } from "unitejs-framework/dist/interfaces/ILogger";
-import { DefaultLogger } from "unitejs-framework/dist/loggers/defaultLogger";
 import { CLI } from "../../../src/cli";
 
 describe("CLI", () => {
     let sandbox: Sinon.SinonSandbox;
     let loggerStub: ILogger;
     let fileSystemStub: IFileSystem;
-    let defaultLoggerStub: Sinon.SinonStub;
     let commandLineParser: CommandLineParser;
     let loggerInfoSpy: Sinon.SinonSpy;
 
@@ -27,8 +25,6 @@ describe("CLI", () => {
         loggerStub.error = () => { };
 
         fileSystemStub = new FileSystem();
-
-        defaultLoggerStub = sandbox.stub(DefaultLogger, "log");
 
         loggerInfoSpy = sandbox.spy(loggerStub, "info");
 
