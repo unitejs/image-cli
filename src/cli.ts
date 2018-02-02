@@ -12,7 +12,7 @@ import { CommandLineArgConstants } from "./commandLineArgConstants";
 import { CommandLineCommandConstants } from "./commandLineCommandConstants";
 
 export class CLI extends CLIBase {
-    private static APP_NAME: string = "UniteJS Image";
+    private static readonly APP_NAME: string = "UniteJS Image";
 
     constructor() {
         super(CLI.APP_NAME);
