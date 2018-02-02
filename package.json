@@ -55,7 +55,7 @@
     "sinon": "^4.1.0",
     "tslint": "^5.7.0",
     "tslint-microsoft-contrib": "^5.0.1",
-    "typescript": "^2.6.1"
+    "typescript": "2.6.2"
   },
   "dependencies": {
     "jimp": "^0.2.28",
