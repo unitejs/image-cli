@@ -16,7 +16,7 @@ install:
   - cd unitejs-image
   - npm link unitejs-framework
   - npm link
-  - cd ../image
+  - cd ../image-cli
   - npm install gulp -g
   - npm link unitejs-framework unitejs-cli-core unitejs-image
   - npm install
